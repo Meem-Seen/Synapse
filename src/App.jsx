@@ -5,14 +5,11 @@ import Workspace from './pages/Workspace'
 import './App.css'
 
 function App() {
-
   return (
-    <RoomProvider>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/workspace" element={<Workspace />} />
-      </Routes>
-    </RoomProvider>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/workspace" element={<Workspace />} />
+    </Routes>
   )
 }
 
