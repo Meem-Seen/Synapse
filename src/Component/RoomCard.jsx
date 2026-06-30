@@ -1,4 +1,10 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom'; 
+
 export default function RoomCard({ room }) {
+
+  const navigate = useNavigate();
+  
   return (
     <div className="col-md-4">
       <div className="room-card">
@@ -11,7 +17,7 @@ export default function RoomCard({ room }) {
         <button
           className="custom-btn w-100"
           onClick={() => {
-            alert(`Joining ${room.name}`);
+            navigate('/workspace');
           }}
         >
           Join
