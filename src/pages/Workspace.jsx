@@ -1,9 +1,12 @@
-
-import React from 'react'
-import Whiteboard from '../Component/Whiteboard'
+import React from 'react';
+import AIChat from "../Component/AIChat";
+import Whiteboard from '../Component/Whiteboard';
 
 export default function Workspace() {
   return (
-    <Whiteboard />
-  )
+    <div>
+      <AIChat />
+      <Whiteboard />
+    </div>
+  );
 }
