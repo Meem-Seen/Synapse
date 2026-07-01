@@ -1,4 +1,4 @@
-import React from 'react';
+import CodeEditor from '../Component/CodeEditor'
 import AIChat from "../Component/AIChat";
 import Whiteboard from '../Component/Whiteboard';
 
@@ -7,6 +7,7 @@ export default function Workspace() {
     <div>
       <AIChat />
       <Whiteboard />
+      <CodeEditor />
     </div>
   );
 }

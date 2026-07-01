@@ -3,6 +3,7 @@ import Navbar from "../Component/Navbar";
 import RoomModal from "../Component/RoomModal";
 import RoomCard from "../Component/RoomCard";
 
+
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
 
