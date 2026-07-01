@@ -99,7 +99,7 @@ body {
   font-size: 24px;
 }
 
-.modal {
+.create-room-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -112,7 +112,7 @@ body {
   z-index: 999;
 }
 
-.modal-content {
+.create-room-modal-content {
   background: #0f172a;
   padding: 30px;
   border-radius: 16px;
@@ -121,16 +121,16 @@ body {
   text-align: center;
 }
 
-.modal-content h2 {
+.create-room-modal-content h2 {
   margin-bottom: 20px;
   color: white;
 }
 
-.modal-content label {
+.create-room-modal-content label {
   color: white;
 }
 
-.modal-content input {
+.create-room-modal-content input {
   width: 100%;
   padding: 12px;
   border-radius: 10px;
@@ -140,7 +140,7 @@ body {
   margin-bottom: 20px;
 }
 
-.modal-buttons {
+.create-room-modal-buttons {
   display: flex;
   gap: 10px;
   margin-top: 12px;
@@ -170,7 +170,7 @@ body {
   margin-bottom: 15px;
 }
 
-.modal-content {
+.create-room-modal-content {
   animation: popUp 0.6s ease;
 }
 

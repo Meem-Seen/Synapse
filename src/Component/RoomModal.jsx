@@ -17,8 +17,8 @@ export default function RoomModal({ showModal, closeModal, createRoom }) {
   }
 
   return (
-    <div className="modal" onClick={closeModal}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <div className="create-room-modal" onClick={closeModal}>
+      <div className="create-room-modal-content" onClick={(e) => e.stopPropagation()}>
         <h2>Create New Room</h2>
 
         <label className="label">Room Name</label>
@@ -30,7 +30,7 @@ export default function RoomModal({ showModal, closeModal, createRoom }) {
           onChange={(e) => setRoomName(e.target.value)}
         />
 
-        <div className="modal-buttons">
+        <div className="create-room-modal-buttons">
           <button className="create" onClick={handleCreate}>
             Create New Room
           </button>
