@@ -11,15 +11,16 @@ import 'ace-builds/src-noconflict/mode-sql'
 import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/theme-one_dark'
 import 'ace-builds/src-noconflict/theme-github'
-import '../index.css'
+import './CodeEditor.css'
+
 ace.config.set('basePath', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.44.0/')
 
 function CodeEditor() {
-    const editorRef = useRef(null)
-    const editorInstance = useRef(null)
-    const [language, setLanguage] = useState('javascript')
-    const [theme, setTheme] = useState('monokai')
-    const [isOpen, setIsOpen] = useState(false)
+  const editorRef = useRef(null)
+  const editorInstance = useRef(null)
+  const [language, setLanguage] = useState('javascript')
+  const [theme, setTheme] = useState('monokai')
+  const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     const editor = ace.edit(editorRef.current)
@@ -61,28 +62,38 @@ function CodeEditor() {
   }
 
   return (
-    <div style={{ flex: 1, background: '#1e1e1e', padding: 20 }}>
-      <select value={language} onChange={e => setLanguage(e.target.value)}>
-        <option value="javascript">JavaScript</option>
-        <option value="python">Python</option>
-        <option value="html">HTML</option>
-        <option value="css">CSS</option>
-        <option value="json">JSON</option>
-        <option value="typescript">TypeScript</option>
-        <option value="sql">SQL</option>
-      </select>
+    <>
+      {!isOpen && (
+        <button className="code-editor-toggle" onClick={() => setIsOpen(true)}>💻</button>
+      )}
 
-      <select value={theme} onChange={e => setTheme(e.target.value)}>
-        <option value="monokai">Monokai</option>
-        <option value="one_dark">One Dark</option>
-        <option value="github">GitHub (Light)</option>
-      </select>
+      <div className={`editor-overlay ${isOpen ? 'active' : ''}`} onClick={() => setIsOpen(false)}>
+        <div className="editor-box" onClick={e => e.stopPropagation()}>
+          <button className="editor-close" onClick={() => setIsOpen(false)}>✕</button>
 
-      <button onClick={runCode}>Run</button>
+          <select value={language} onChange={e => setLanguage(e.target.value)}>
+            <option value="javascript">JavaScript</option>
+            <option value="python">Python</option>
+            <option value="html">HTML</option>
+            <option value="css">CSS</option>
+            <option value="json">JSON</option>
+            <option value="typescript">TypeScript</option>
+            <option value="sql">SQL</option>
+          </select>
 
-      <div ref={editorRef} style={{ width: '100%', height: '400px' }} />
-      <div id="output" style={{ color: 'white', marginTop: 10 }} />
-    </div>
+          <select value={theme} onChange={e => setTheme(e.target.value)}>
+            <option value="monokai">Monokai</option>
+            <option value="one_dark">One Dark</option>
+            <option value="github">GitHub (Light)</option>
+          </select>
+
+          <button className="editor-run-btn" onClick={runCode}>Run</button>
+
+          <div className="editor-ace" ref={editorRef} />
+          <div className="editor-output" id="output" />
+        </div>
+      </div>
+    </>
   )
 }
 
