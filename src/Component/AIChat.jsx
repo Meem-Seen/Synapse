@@ -1,5 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 import "../App.css";
+
+console.log("KEY:", import.meta.env.VITE_GEMINI_API_KEY);
+
+async function askGemini(prompt) {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          { role: "user", parts: [{ text: prompt }] }
+        ],
+      }),
+    }
+  );
+
+  const data = await response.json();
+  return data.candidates[0].content.parts[0].text;
+}
 function AIChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -23,34 +45,44 @@ function AIChat() {
     }
   }, [isOpen]);
 
-  const sendMessage = () => {
-    if (!input.trim() || isThinking) return;
+  const sendMessage = async () => {
+  if (!input.trim() || isThinking) return;
 
-    const userMsg = { text: input.trim(), sender: "user" };
-    const newMessages = [...messages, userMsg];
-    setMessages(newMessages);
-    setInput("");
-    setIsThinking(true);
+  const question = input.trim();
 
-    setTimeout(() => {
-      const msg = input.toLowerCase();
-      let reply = "I'm not sure I understand. Could you rephrase that? ";
-
-      if (msg.includes("hello") || msg.includes("hi"))
-        reply = "Hey there! How can I help you today?";
-      else if (msg.includes("name"))
-        reply = "I'm Synapty AI  — your smart assistant.";
-      else if (msg.includes("good") || msg.includes("great"))
-        reply = "Glad to hear that!  Anything I can help with?";
-      else if (msg.includes("bye") || msg.includes("goodbye"))
-        reply = "See you later!  Come back anytime.";
-      else if (msg.includes("help"))
-        reply = "Sure! Just tell me what you need and I'll do my best. ";
-
-      setIsThinking(false);
-      setMessages((prev) => [...prev, { text: reply, sender: "bot" }]);
-    }, 1000);
+  const userMsg = {
+    text: question,
+    sender: "user",
   };
+
+  setMessages((prev) => [...prev, userMsg]);
+  setInput("");
+  setIsThinking(true);
+
+  try {
+    const reply = await askGemini(question);
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: reply,
+        sender: "bot",
+      },
+    ]);
+  } catch (error) {
+    console.error(error);
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: "حدث خطأ أثناء الاتصال بـ Gemini.",
+        sender: "bot",
+      },
+    ]);
+  } finally {
+    setIsThinking(false);
+  }
+};
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
