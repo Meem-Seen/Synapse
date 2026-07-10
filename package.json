@@ -12,6 +12,7 @@
   "dependencies": {
     "@excalidraw/excalidraw": "^0.18.1",
     "@fortawesome/fontawesome-free": "^7.3.0",
+    "@google/genai": "^2.10.0",
     "@google/generative-ai": "^0.24.1",
     "ace-builds": "^1.44.0",
     "bootstrap": "^5.3.8",
