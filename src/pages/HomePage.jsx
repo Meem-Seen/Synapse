@@ -2,9 +2,24 @@ import { useEffect, useState } from "react";
 import Navbar from "../Component/Navbar";
 import RoomModal from "../Component/RoomModal";
 import RoomCard from "../Component/RoomCard";
+import AuthModal from "../Component/AuthModal";
+import { useAuth } from "../Component/AuthContext";
 
 export default function HomePage() {
+  const { user } = useAuth();
   const [showModal, setShowModal] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [rooms, setRooms] = useState([]);
+
+  function handleCreateRoomClick() {
+    if (user) {
+      setShowModal(true);
+    } else {
+      setIsAuthOpen(true);
+    }
+  }
+
+  function handleAuthSuccess() {
 
   const [rooms, setRooms] = useState(() => {
     const savedRooms = localStorage.getItem("rooms");
@@ -25,6 +40,7 @@ export default function HomePage() {
 
   function createRoom(roomName) {
     const today = new Date().toLocaleDateString();
+    setRooms((prevRooms) => [...prevRooms, { name: roomName, date: today }]);
 
     setRooms((prevRooms) => [
       ...prevRooms,
@@ -39,7 +55,7 @@ export default function HomePage() {
 
   return (
     <>
-      <Navbar openModal={openModal} />
+      <Navbar openModal={handleCreateRoomClick} />
 
       <section className="home text-center container">
         <div className="custom-badge">Real-time Collaboration Made Simple</div>
@@ -55,7 +71,7 @@ export default function HomePage() {
         </p>
 
         <div className="buttons">
-          <button className="btn-1" onClick={openModal}>
+          <button className="btn-1" onClick={handleCreateRoomClick}>
             Create a Room
           </button>
 
@@ -92,6 +108,12 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <AuthModal
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+        onJoinSuccess={handleAuthSuccess}
+      />
 
       <RoomModal
         showModal={showModal}
