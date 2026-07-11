@@ -1,0 +1,135 @@
+.workspace-navbar {
+  background: #1a1c23;
+  padding: 10px 24px;
+  border-bottom: 1px solid #2a2d36;
+  z-index: 1030;
+}
+
+.workspace-navbar .container-fluid {
+  position: relative;
+}
+
+.room-info {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.logo-badge {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.app-name {
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #a855f7;
+  display: inline-block;
+}
+
+.room-name {
+  color: #fff;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.room-tag {
+  background: #2a2d36;
+  color: #9ca3af;
+  font-size: 12px;
+  padding: 3px 10px;
+  font-weight: 500;
+}
+
+.control-item {
+  background: #23252e;
+  color: #d1d5db;
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+.layout-switcher {
+  background: #23252e;
+  padding: 4px 6px;
+}
+
+.layout-btn {
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.layout-btn:hover {
+  color: #d1d5db;
+  background: #2f323e;
+}
+
+.layout-btn.active {
+  color: #a855f7;
+  background: rgba(168, 85, 247, 0.15);
+}
+
+.user-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.user-name {
+  font-weight: 500;
+}
+
+.online-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  display: inline-block;
+}
+.offline-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #c52235;
+  display: inline-block;
+}
+
+
+.online-connection-status {
+  color: #22c55e;
+}
+.offline-connection-status {
+  color: #c52235;
+}
+
+
+.cursor-pointer{
+  cursor: pointer;
+}

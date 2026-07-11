@@ -1,15 +1,22 @@
 import { useEffect, useState } from "react";
+import { useAuth } from "../Component/AuthContext";
 import Navbar from "../Component/Navbar";
 import RoomModal from "../Component/RoomModal";
 import RoomCard from "../Component/RoomCard";
 import AuthModal from "../Component/AuthModal";
-import { useAuth } from "../Component/AuthContext";
 
 export default function HomePage() {
   const { user } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] = useState(() => {
+    const savedRooms = localStorage.getItem("rooms");
+    return savedRooms ? JSON.parse(savedRooms) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("rooms", JSON.stringify(rooms));
+  }, [rooms]);
 
   function handleCreateRoomClick() {
     if (user) {
@@ -20,18 +27,7 @@ export default function HomePage() {
   }
 
   function handleAuthSuccess() {
-
-  const [rooms, setRooms] = useState(() => {
-    const savedRooms = localStorage.getItem("rooms");
-
-    return savedRooms ? JSON.parse(savedRooms) : [];
-  });
-
-  useEffect(() => {
-    localStorage.setItem("rooms", JSON.stringify(rooms));
-  }, [rooms]);
-  function openModal() {
-    setShowModal(true);
+    setIsAuthOpen(false);
   }
 
   function closeModal() {
@@ -40,8 +36,6 @@ export default function HomePage() {
 
   function createRoom(roomName) {
     const today = new Date().toLocaleDateString();
-    setRooms((prevRooms) => [...prevRooms, { name: roomName, date: today }]);
-
     setRooms((prevRooms) => [
       ...prevRooms,
       {
@@ -52,7 +46,7 @@ export default function HomePage() {
       },
     ]);
   }
-
+  
   return (
     <>
       <Navbar openModal={handleCreateRoomClick} />
