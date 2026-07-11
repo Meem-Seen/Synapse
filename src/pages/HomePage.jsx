@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../Component/Navbar";
 import RoomModal from "../Component/RoomModal";
 import RoomCard from "../Component/RoomCard";
@@ -20,6 +20,17 @@ export default function HomePage() {
   }
 
   function handleAuthSuccess() {
+
+  const [rooms, setRooms] = useState(() => {
+    const savedRooms = localStorage.getItem("rooms");
+
+    return savedRooms ? JSON.parse(savedRooms) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("rooms", JSON.stringify(rooms));
+  }, [rooms]);
+  function openModal() {
     setShowModal(true);
   }
 
@@ -30,6 +41,16 @@ export default function HomePage() {
   function createRoom(roomName) {
     const today = new Date().toLocaleDateString();
     setRooms((prevRooms) => [...prevRooms, { name: roomName, date: today }]);
+
+    setRooms((prevRooms) => [
+      ...prevRooms,
+      {
+        id: Date.now(),
+        name: roomName,
+        date: today,
+        members: 4,
+      },
+    ]);
   }
 
   return (
