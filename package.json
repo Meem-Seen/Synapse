@@ -16,6 +16,7 @@
     "@google/generative-ai": "^0.24.1",
     "ace-builds": "^1.44.0",
     "bootstrap": "^5.3.8",
+    "lucide-react": "^1.24.0",
     "react": "^19.2.5",
     "react-ace": "^14.0.1",
     "react-dom": "^19.0.0",

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "../App.css";
+import { Send, X, Bot,Brain, MessageCircle } from "lucide-react";
 
 console.log("KEY:", import.meta.env.VITE_GEMINI_API_KEY);
 
@@ -103,7 +104,7 @@ function AIChat() {
       {/* Toggle Button — hidden when open */}
       {!isOpen && (
         <button id="chatToggle" onClick={() => setIsOpen(true)} aria-label="Open chat">
-          💬
+          <MessageCircle size={22} />
         </button>
       )}
 
@@ -113,10 +114,10 @@ function AIChat() {
         {/* Header */}
         <div className="chat-header">
           <div className="logo">
-            <span className="chat-robot-icon">🤖</span>
+
             <span className="logo-name">Synapty</span>
           </div>
-          <button onClick={() => setIsOpen(false)} aria-label="Close chat">✕</button>
+          <button onClick={() => setIsOpen(false)} aria-label="Close chat"><X size={18} strokeWidth={2.5} /></button>
         </div>
 
         {/* Body */}
@@ -127,7 +128,7 @@ function AIChat() {
               className={`message ${msg.sender === "user" ? "user-message" : "bot-message"}`}
             >
               {msg.sender === "bot" && (
-                <div className="chat-robot">🤖</div>
+                <div className="chat-robot"><Bot size={18} /></div>
               )}
               <div className="message-text">{msg.text}</div>
             </div>
@@ -136,7 +137,7 @@ function AIChat() {
           {/* Thinking animation */}
           {isThinking && (
             <div className="message bot-message">
-              <div className="chat-robot">🤖</div>
+              <div className="chat-robot"><Brain size={18} /></div>
               <div className="chat-thinking">
                 <span className="dot" />
                 <span className="dot" />
@@ -168,7 +169,7 @@ function AIChat() {
                 disabled={!input.trim() || isThinking}
                 aria-label="Send message"
               >
-                ⬆
+                <Send size={14} />
               </button>
             </div>
           </div>
