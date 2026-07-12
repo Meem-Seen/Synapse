@@ -63,32 +63,6 @@
   font-size: 13px;
 }
 
-.layout-switcher {
-  background: #23252e;
-  padding: 4px 6px;
-}
-
-.layout-btn {
-  background: transparent;
-  border: none;
-  color: #6b7280;
-  padding: 4px 8px;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.layout-btn:hover {
-  color: #d1d5db;
-  background: #2f323e;
-}
-
-.layout-btn.active {
-  color: #a855f7;
-  background: rgba(168, 85, 247, 0.15);
-}
-
 .user-avatar {
   display: flex;
   align-items: center;

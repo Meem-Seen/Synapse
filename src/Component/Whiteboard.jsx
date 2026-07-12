@@ -4,7 +4,7 @@ import "@excalidraw/excalidraw/index.css";
 
 export default function Whiteboard() {
   return (
-    <div style={{ width: "100vw", height: "100dvh" }}>
+    <div style={{ width: "100wd", height: "100vh" }}>
       <Excalidraw>
         <MainMenu>
           <MainMenu.DefaultItems.LoadScene />
@@ -13,7 +13,6 @@ export default function Whiteboard() {
           <MainMenu.DefaultItems.ClearCanvas />
           <MainMenu.DefaultItems.ToggleTheme />
         </MainMenu>
-    
       </Excalidraw>
     </div>
   );

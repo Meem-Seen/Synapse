@@ -29,38 +29,13 @@ export default function WorkspaceNavbar() {
             <i className="fa-solid fa-user-group" />
             <span>4 in the room</span>
           </div>
-
-          {/* Layout Switcher */}
-          <div className="layout-switcher d-flex align-items-center rounded-pill">
-            <button
-              className={`layout-btn ${activeLayout === 'grid' ? 'active' : ''}`}
-              onClick={() => setActiveLayout('grid')}
-              title="Grid view"
-            >
-              <i className="fa-solid fa-grip" />
-            </button>
-            <button
-              className={`layout-btn ${activeLayout === 'column' ? 'active' : ''}`}
-              onClick={() => setActiveLayout('column')}
-              title="Column view"
-            >
-              <i className="fa-solid fa-columns" />
-            </button>
-            <button
-              className={`layout-btn ${activeLayout === 'rows' ? 'active' : ''}`}
-              onClick={() => setActiveLayout('rows')}
-              title="Rows view"
-            >
-              <i className="fa-solid fa-bars" />
-            </button>
-          </div>
-
+     
           {/* User Menu */}
-          <div className="control-item user-menu d-flex align-items-center gap-2 rounded-pill">
+          <div className="control-item user-menu d-flex align-items-center gap-2 rounded-pill dropdown">
             <span className="user-avatar">MS</span>
             <span className="user-name">UserName</span>
             <i className="fa-solid fa-chevron-down" />
-          </div>
+            </div>
 
           {/* Connection Status */}
           <div className="control-item d-flex align-items-center gap-2 rounded-pill offline-connection-status">
@@ -71,6 +46,7 @@ export default function WorkspaceNavbar() {
         </div>
 
       </div>
+
     </nav>
   )
 }
