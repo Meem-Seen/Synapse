@@ -1,6 +1,6 @@
 .code-editor-toggle {
   position: fixed;
-  bottom: 90px;
+  bottom: 24px;
   right: 24px;
   z-index: 999;
   width: 52px;
@@ -31,6 +31,8 @@
   z-index: 1000;
   align-items: center;
   justify-content: center;
+    padding-top: 80px;
+
 }
 
 .editor-overlay.active {

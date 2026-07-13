@@ -4,7 +4,7 @@
 .chat-container {
   width: 320px;
   max-width: 90vw;
-  height: 100vh;
+  height: 91vh;
 
   background: #222;
   color: #fff;
@@ -21,7 +21,7 @@
     0 20px 50px rgba(0, 0, 0, 0.25);
 
   position: fixed;
-  top: 0;
+  bottom: 0;
   left: 0;
   z-index: 1000;
 
@@ -140,9 +140,9 @@
 }
 
 .user-message .message-text {
-  background: #1a1a1a;
+  background: #ffffff;
   border-radius: 14px 14px 4px 14px;
-  color: #e8e8e8;
+  color: #000000;
 }
 
 /* Robot avatar */
