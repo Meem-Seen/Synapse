@@ -36,9 +36,9 @@ export default function Navbar({ openModal }) {
                   className="d-flex align-items-center justify-content-center rounded-circle fw-bold text-white"
                   style={{ width: 32, height: 32, backgroundColor: "#4f46e5", fontSize: 14 }}
                 >
-                  {user.name[0].toUpperCase()}
+                 {user.user_metadata?.full_name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase()}
                 </span>
-                <span className="fw-semibold">{user.name}</span>
+                <span className="fw-semibold">{user.user_metadata?.full_name || user.email}</span>
               </button>
 
               {menuOpen && (

@@ -8,7 +8,6 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/workspace" element={<Workspace />} />
-    </Routes>
+      <Route path="/workspace/:roomId" element={<Workspace />} />    </Routes>
   );
 }

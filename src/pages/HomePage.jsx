@@ -6,20 +6,16 @@ import RoomCard from "../Component/RoomCard";
 import AuthModal from "../Component/AuthModal";
 import ShapeGrid from "../Component/ShapeGrid/ShapeGrid";
 import { Pencil, Code2, Sparkles } from "lucide-react";
-
+import { getRooms, createRoom as apiCreateRoom } from '../api'
 export default function HomePage() {
   const { user } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [rooms, setRooms] = useState(() => {
-    const savedRooms = localStorage.getItem("rooms");
-    return savedRooms ? JSON.parse(savedRooms) : [];
-  });
+  const [rooms, setRooms] = useState([])
 
   useEffect(() => {
-    localStorage.setItem("rooms", JSON.stringify(rooms));
-  }, [rooms]);
-
+  getRooms().then(setRooms).catch(console.error)
+  }, [])
   function handleCreateRoomClick() {
     if (user) {
       setShowModal(true);
@@ -35,21 +31,10 @@ export default function HomePage() {
   function closeModal() {
     setShowModal(false);
   }
-
-  function createRoom(roomName) {
-    const today = new Date().toLocaleDateString();
-
-    setRooms((prevRooms) => [
-      ...prevRooms,
-      {
-        id: Date.now(),
-        name: roomName,
-        date: today,
-        members: 4,
-      },
-    ]);
-  }
-
+    async function createRoom(roomName) {
+      const newRoom = await apiCreateRoom(roomName)
+      setRooms((prev) => [newRoom, ...prev])
+    }
   return (
     <>
       <Navbar openModal={handleCreateRoomClick} />

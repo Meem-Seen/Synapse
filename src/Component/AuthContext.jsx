@@ -1,75 +1,52 @@
 import { createContext, useContext, useState, useEffect } from "react";
-
+import { supabase } from "../api/supabaseClient";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem("synapse_user");
-    if (saved) {
-      try {
-        setUser(JSON.parse(saved));
-      } catch {
-        localStorage.removeItem("synapse_user");
-      }
-    }
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) setUser(data.user);
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      },
+    );
+    return () => listener?.subscription.unsubscribe();
   }, []);
 
-  function getUsers() {
-    try {
-      return JSON.parse(localStorage.getItem("synapse_users")) || [];
-    } catch {
-      return [];
-    }
-  }
-
-  function saveUsers(users) {
-    localStorage.setItem("synapse_users", JSON.stringify(users));
-  }
-
-  function setSession(userData) {
-    const { password, ...safeUser } = userData;
-    setUser(safeUser);
-    localStorage.setItem("synapse_user", JSON.stringify(safeUser));
-  }
-
-
-  function register({ firstName, lastName, email, password }) {
-    const users = getUsers();
-    const alreadyExists = users.some(
-      (u) => u.email.toLowerCase() === email.toLowerCase()
-    );
-    if (alreadyExists) {
-      throw new Error("An account with this email already exists. Try signing in instead.");
-    }
-    const newUser = {
-      firstName,
-      lastName,
+  async function register({ firstName, lastName, email, password }) {
+    const { error } = await supabase.auth.signUp({
       email,
       password,
-      name: `${firstName} ${lastName}`.trim(),
-    };
-    users.push(newUser);
-    saveUsers(users);
-    setSession(newUser);
+      options: { data: { full_name: `${firstName} ${lastName}`.trim() } },
+    });
+    if (error) {
+      if (error.message.includes("already registered")) {
+        throw new Error("An account with this email already exists.");
+      }
+      throw error;
+    }
   }
 
-  function login({ email, password }) {
-    const users = getUsers();
-    const found = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
-    if (!found) {
-      throw new Error("No account found with this email. Create one instead.");
+  async function login({ email, password }) {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) {
+      if (error.message.includes("Invalid login credentials")) {
+        throw new Error("Invalid email or password.");
+      }
+      throw error;
     }
-    if (found.password !== password) {
-      throw new Error("Incorrect password. Please try again.");
-    }
-    setSession(found);
   }
 
-  function logout() {
+  async function logout() {
+    await supabase.auth.signOut();
     setUser(null);
-    localStorage.removeItem("synapse_user");
   }
 
   return (

@@ -1,35 +1,57 @@
 import { useEffect, useRef, useState } from "react";
 import "../App.css";
-import { Send, X, Bot,Brain, MessageCircle } from "lucide-react";
+import { Send, X, Bot, Brain, MessageCircle } from "lucide-react";
+import {
+  getMessages,
+  sendMessage as apiSendMessage,
+  subscribeToMessages,
+  broadcastMessage,
+} from "../api";
 
-console.log("KEY:", import.meta.env.VITE_GEMINI_API_KEY);
+async function askGroq(prompt) {
+  const apiKey = import.meta.env.VITE_GROQ_API_KEY;
 
-async function askGemini(prompt) {
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-  
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+    "https://api.groq.com/openai/v1/chat/completions",
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + apiKey,
+      },
       body: JSON.stringify({
-        contents: [
-          { role: "user", parts: [{ text: prompt }] }
-        ],
+        model: "llama-3.3-70b-versatile",
+        messages: [{ role: "user", content: prompt }],
       }),
-    }
+    },
   );
 
   const data = await response.json();
-  return data.candidates[0].content.parts[0].text;
+  return data.choices[0].message.content;
 }
-function AIChat() {
+
+function AIChat({ roomId }) {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([
     { text: "Hey I'm Synapty AI. How can I help you?", sender: "bot" },
   ]);
   const [isThinking, setIsThinking] = useState(false);
+
+  useEffect(() => {
+    if (!roomId) return;
+    getMessages(roomId).then((msgs) => {
+      if (!Array.isArray(msgs)) return;
+      setMessages([{ text: "Hey I'm Synapty AI. How can I help you?", sender: "bot" }, ...msgs.map((m) => ({ text: m.text, sender: "bot" }))]);
+    }).catch(() => {});
+    const channel = subscribeToMessages(roomId, (msg) => {
+      setMessages((prev) => {
+        if (prev.some((m) => m.text === msg.text && m.sender === msg.sender)) return prev;
+        return [...prev, msg];
+      });
+    });
+    return () => channel.unsubscribe();
+  }, [roomId]);
 
   const chatEndRef = useRef(null);
   const textareaRef = useRef(null);
@@ -46,49 +68,51 @@ function AIChat() {
     }
   }, [isOpen]);
 
-  const sendMessage = async () => {
-  if (!input.trim() || isThinking) return;
+  const handleSend = async () => {
+    if (!input.trim() || isThinking) return;
 
-  const question = input.trim();
+    const question = input.trim();
 
-  const userMsg = {
-    text: question,
-    sender: "user",
+    const userMsg = { text: question, sender: "user" };
+    setMessages((prev) => [...prev, userMsg]);
+    await apiSendMessage(roomId, question);
+    await broadcastMessage(roomId, { text: question, sender: "user" });
+
+    setInput("");
+    setIsThinking(true);
+
+    try {
+      const reply = await askGroq(question);
+
+      const saved = await apiSendMessage(roomId, reply);
+      await broadcastMessage(roomId, { text: reply, sender: "bot" });
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: reply,
+          sender: "bot",
+        },
+      ]);
+    } catch (error) {
+      console.error(error);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: "حدث خطأ أثناء الاتصال بـ Groq.",
+          sender: "bot",
+        },
+      ]);
+    } finally {
+      setIsThinking(false);
+    }
   };
-
-  setMessages((prev) => [...prev, userMsg]);
-  setInput("");
-  setIsThinking(true);
-
-  try {
-    const reply = await askGemini(question);
-
-    setMessages((prev) => [
-      ...prev,
-      {
-        text: reply,
-        sender: "bot",
-      },
-    ]);
-  } catch (error) {
-    console.error(error);
-
-    setMessages((prev) => [
-      ...prev,
-      {
-        text: "حدث خطأ أثناء الاتصال بـ Gemini.",
-        sender: "bot",
-      },
-    ]);
-  } finally {
-    setIsThinking(false);
-  }
-};
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      sendMessage();
+      handleSend();
     }
   };
 
@@ -103,21 +127,25 @@ function AIChat() {
     <>
       {/* Toggle Button — hidden when open */}
       {!isOpen && (
-        <button id="chatToggle" onClick={() => setIsOpen(true)} aria-label="Open chat">
+        <button
+          id="chatToggle"
+          onClick={() => setIsOpen(true)}
+          aria-label="Open chat"
+        >
           <MessageCircle size={22} />
         </button>
       )}
 
       {/* Chat Container */}
       <div className={`chat-container ${isOpen ? "active" : ""}`}>
-
         {/* Header */}
         <div className="chat-header">
           <div className="logo">
-
             <span className="logo-name">Synapty</span>
           </div>
-          <button onClick={() => setIsOpen(false)} aria-label="Close chat"><X size={18} strokeWidth={2.5} /></button>
+          <button onClick={() => setIsOpen(false)} aria-label="Close chat">
+            <X size={18} strokeWidth={2.5} />
+          </button>
         </div>
 
         {/* Body */}
@@ -128,7 +156,9 @@ function AIChat() {
               className={`message ${msg.sender === "user" ? "user-message" : "bot-message"}`}
             >
               {msg.sender === "bot" && (
-                <div className="chat-robot"><Bot size={18} /></div>
+                <div className="chat-robot">
+                  <Bot size={18} />
+                </div>
               )}
               <div className="message-text">{msg.text}</div>
             </div>
@@ -137,7 +167,9 @@ function AIChat() {
           {/* Thinking animation */}
           {isThinking && (
             <div className="message bot-message">
-              <div className="chat-robot"><Brain size={18} /></div>
+              <div className="chat-robot">
+                <Brain size={18} />
+              </div>
               <div className="chat-thinking">
                 <span className="dot" />
                 <span className="dot" />
@@ -165,7 +197,7 @@ function AIChat() {
             <div className="chat-controls">
               <button
                 className="send-btn"
-                onClick={sendMessage}
+                onClick={handleSend}
                 disabled={!input.trim() || isThinking}
                 aria-label="Send message"
               >
@@ -174,7 +206,6 @@ function AIChat() {
             </div>
           </div>
         </div>
-
       </div>
     </>
   );
