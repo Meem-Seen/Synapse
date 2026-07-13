@@ -339,3 +339,29 @@
 .chat-body::-webkit-scrollbar-thumb:hover {
   background: #666;
 }
+
+.dropdown-menu{
+    margin-top: 10px;
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 8px 25px rgba(0,0,0,.2);
+    padding: 8px;
+    overflow: hidden;
+}
+
+.dropdown-item{
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-weight: 500;
+    transition: all .3s ease;
+}
+
+.dropdown-item:hover{
+    background-color: #f3f4f6;
+    transform: translateX(4px);
+}
+
+.dropdown-item.text-danger:hover{
+    background-color: #ffe5e5;
+    color: #dc3545 ;
+}
