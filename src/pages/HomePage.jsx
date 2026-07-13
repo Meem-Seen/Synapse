@@ -16,7 +16,7 @@ export default function HomePage() {
   useEffect(() => {
   getRooms().then(setRooms).catch(console.error)
   }, [])
-  function handleCreateRoomClick() {
+    function handleCreateRoomClick() {
     if (user) {
       setShowModal(true);
     } else {

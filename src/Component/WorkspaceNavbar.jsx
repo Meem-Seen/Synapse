@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "../WorkspaceNavbar.css";
+import "../App.css";
 import { useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
 import { useAuth } from "./AuthContext";

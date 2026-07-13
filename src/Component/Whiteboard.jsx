@@ -32,7 +32,7 @@ export default function Whiteboard({ roomId }) {
   }, [roomId, ready]);
 
   return (
-    <div style={{ width: "100dvw", height: "100dvh" }}>
+    <div style={{ flex: 1, minHeight: 0, width: '100%' }}>
       <Excalidraw
         excalidrawAPI={(api) => {
           excalidrawRef.current = api;

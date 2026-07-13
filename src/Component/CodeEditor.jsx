@@ -12,6 +12,7 @@ import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/theme-one_dark'
 import 'ace-builds/src-noconflict/theme-github'
 import '../CodeEditor.css'
+import { Code2 } from "lucide-react";
 import { getCode, saveCode, subscribeToCode, broadcastCode } from '../api'
 
 ace.config.set('basePath', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.44.0/')
@@ -99,7 +100,7 @@ function CodeEditor({ roomId }) {
   return (
     <>
       {!isOpen && (
-        <button className="code-editor-toggle" onClick={() => setIsOpen(true)}>💻</button>
+        <button className="code-editor-toggle" title='Code-editor' onClick={() => setIsOpen(true)}> <Code2 /></button>
       )}
 
       <div className={`editor-overlay ${isOpen ? 'active' : ''}`} onClick={() => setIsOpen(false)}>
