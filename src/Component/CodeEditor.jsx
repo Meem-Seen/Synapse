@@ -12,12 +12,15 @@ import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/theme-one_dark'
 import 'ace-builds/src-noconflict/theme-github'
 import '../CodeEditor.css'
+import { Code2 } from "lucide-react";
+import { getCode, saveCode, subscribeToCode, broadcastCode } from '../api'
 
 ace.config.set('basePath', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.44.0/')
 
-function CodeEditor() {
+function CodeEditor({ roomId }) {
   const editorRef = useRef(null)
   const editorInstance = useRef(null)
+  const isRemoteUpdate = useRef(false)
   const [language, setLanguage] = useState('javascript')
   const [theme, setTheme] = useState('monokai')
   const [isOpen, setIsOpen] = useState(false)
@@ -26,10 +29,43 @@ function CodeEditor() {
     const editor = ace.edit(editorRef.current)
     editor.setTheme('ace/theme/monokai')
     editor.session.setMode('ace/mode/javascript')
-    editor.setOptions({ fontSize: '20px', showPrintMargin: false })
+    editor.setOptions({ fontSize: '20px', showPrintMargin: false, useWorker: false })
     editorInstance.current = editor
+
+    let saveTimer
+    editor.on('change', () => {
+      if (isRemoteUpdate.current) return
+      clearTimeout(saveTimer)
+      saveTimer = setTimeout(async () => {
+        if (!roomId) return
+        const content = editor.getValue()
+        const saved = await saveCode(roomId, content, language)
+        await broadcastCode(roomId, saved)
+      }, 1000)
+    })
+
     return () => editor.destroy()
   }, [])
+
+  useEffect(() => {
+    if (!roomId) return
+    getCode(roomId).then((data) => {
+      if (data && editorInstance.current) {
+        isRemoteUpdate.current = true
+        editorInstance.current.setValue(data.content, -1)
+        editorInstance.current.clearSelection()
+        isRemoteUpdate.current = false
+      }
+    })
+    subscribeToCode(roomId, (data) => {
+      if (data && editorInstance.current) {
+        isRemoteUpdate.current = true
+        editorInstance.current.setValue(data.content ?? '', -1)
+        editorInstance.current.clearSelection()
+        isRemoteUpdate.current = false
+      }
+    })
+  }, [roomId])
 
   useEffect(() => {
     editorInstance.current?.session.setMode('ace/mode/' + language)
@@ -64,7 +100,7 @@ function CodeEditor() {
   return (
     <>
       {!isOpen && (
-        <button className="code-editor-toggle" onClick={() => setIsOpen(true)}>💻</button>
+        <button className="code-editor-toggle" title='Code-editor' onClick={() => setIsOpen(true)}> <Code2 /></button>
       )}
 
       <div className={`editor-overlay ${isOpen ? 'active' : ''}`} onClick={() => setIsOpen(false)}>

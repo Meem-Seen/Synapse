@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUsers } from "react-icons/fa";
+import { joinRoom } from "../api";
 
 export default function RoomCard({ room }) {
   const navigate = useNavigate();
@@ -13,17 +14,18 @@ export default function RoomCard({ room }) {
 
           <div className="d-flex align-items-center gap-1">
             <FaUsers />
-            <span>{room.members}</span>
+            <span>{room.member_count ?? 0}</span>
           </div>
         </div>
         <p>A new collaborative learning room</p>
 
-        <p>{room.date}</p>
+        <p>{room.created_at ? new Date(room.created_at).toLocaleDateString() : ""}</p>
 
         <button
           className="custom-btn w-100"
-          onClick={() => {
-            navigate("/workspace");
+          onClick={async () => {
+            await joinRoom(room.id);
+            navigate("/workspace/" + room.id);
           }}
         >
           Join
