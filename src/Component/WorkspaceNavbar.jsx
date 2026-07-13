@@ -1,20 +1,38 @@
-import { useState } from 'react'
-import '../WorkspaceNavbar.css'
+import { useState, useEffect } from "react";
+import "../WorkspaceNavbar.css";
 import { useNavigate } from "react-router-dom";
-import { LogIn , LogOut } from 'lucide-react';
+import { LogOut } from "lucide-react";
+import { useAuth } from "./AuthContext";
+import { getRoom } from "../api";
 
-export default function WorkspaceNavbar() {
-  const [activeLayout, setActiveLayout] = useState('grid')
+export default function WorkspaceNavbar({ roomId }) {
+  const [room, setRoom] = useState(null);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (roomId) getRoom(roomId).then(setRoom).catch(console.error);
+  }, [roomId]);
+
+  useEffect(() => {
+    const goOnline = () => setIsOnline(true);
+    const goOffline = () => setIsOnline(false);
+    window.addEventListener("online", goOnline);
+    window.addEventListener("offline", goOffline);
+    return () => {
+      window.removeEventListener("online", goOnline);
+      window.removeEventListener("offline", goOffline);
+    };
+  }, []);
+
   return (
     <nav className="workspace-navbar sticky-top">
       <div className="container-fluid d-flex align-items-center">
         {/* Logo */}
         <div
           className="d-flex align-items-center gap-2 cursor-pointer"
-          onClick={() => {
-            navigate("/");
-          }}
+          onClick={() => navigate("/")}
         >
           <span className="logo-badge">✦</span>
           <span className="app-name">Synapse</span>
@@ -23,7 +41,7 @@ export default function WorkspaceNavbar() {
         {/* Room Info */}
         <div className="d-flex align-items-center gap-2 room-info">
           <span className="status-dot" />
-          <span className="room-name">Room Name</span>
+          <span className="room-name">{room?.name ?? "Loading..."}</span>
         </div>
 
         {/* Controls on the right */}
@@ -31,7 +49,7 @@ export default function WorkspaceNavbar() {
           {/* Attendee Counter */}
           <div className="control-item d-flex align-items-center gap-2 rounded-pill">
             <i className="fa-solid fa-user-group" />
-            <span>4 in the room</span>
+            <span>{room?.member_count ?? 0} in the room</span>
           </div>
 
           {/* User Menu */}
@@ -42,28 +60,38 @@ export default function WorkspaceNavbar() {
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              <span className="user-avatar">MS</span>
-              <span className="user-name">UserName</span>
+              <span className="user-avatar">
+                {user?.user_metadata?.full_name?.[0]?.toUpperCase() ||
+                  user?.email?.[0]?.toUpperCase() ||
+                  "?"}
+              </span>
+              <span className="user-name">
+                {user?.user_metadata?.full_name || user?.email || "Guest"}
+              </span>
               <i className="fa-solid fa-chevron-down" />
             </button>
 
             <ul className="dropdown-menu dropdown-menu-end">
-           
-              <li>
-                <button className="dropdown-item"><LogIn/> Login</button>
-              </li>
-
-              <li>
-                <button className="dropdown-item text-danger"><LogOut/> Logout</button>
-              </li>
+              {user && (
+                <li>
+                  <button
+                    className="dropdown-item text-danger"
+                    onClick={() => {
+                     logout();
+                      navigate("/");
+                    }}
+                  >
+                    <LogOut /> Logout
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
-
           {/* Connection Status */}
-          <div className="control-item d-flex align-items-center gap-2 rounded-pill offline-connection-status">
-            <span className="offline-dot" />
+          <div className={`control-item d-flex align-items-center gap-2 rounded-pill ${isOnline ? "online-connection-status" : "offline-connection-status"}`}>
+            <span className={isOnline ? "online-dot" : "offline-dot"} />
             <i className="fa-solid fa-wifi" />
-            <span>offline</span>
+            <span>{isOnline ? "online" : "offline"}</span>
           </div>
         </div>
       </div>

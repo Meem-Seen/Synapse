@@ -10,29 +10,25 @@ import {
 
 export default function Whiteboard({ roomId }) {
   const excalidrawRef = useRef(null);
-  const isRemoteUpdate = useRef(false);
+  const skipNextChange = useRef(false);
   const [ready, setReady] = useState(false);
+
+  const updateFromRemote = (data) => {
+    if (!excalidrawRef.current) return;
+    skipNextChange.current = true;
+    excalidrawRef.current.updateScene({ elements: data.scene_data });
+  };
 
   useEffect(() => {
     if (!roomId || !ready) return;
 
     getWhiteboardScene(roomId).then((data) => {
-      if (data && excalidrawRef.current) {
-        isRemoteUpdate.current = true;
-        excalidrawRef.current.updateScene({ elements: data.scene_data });
-        isRemoteUpdate.current = false;
-      }
+      if (data) updateFromRemote(data);
     }).catch(() => {});
 
-    const channel = subscribeToWhiteboard(roomId, (data) => {
-      if (excalidrawRef.current) {
-        isRemoteUpdate.current = true;
-        excalidrawRef.current.updateScene({ elements: data.scene_data });
-        isRemoteUpdate.current = false;
-      }
+    subscribeToWhiteboard(roomId, (data) => {
+      updateFromRemote(data);
     });
-
-    return () => channel.unsubscribe();
   }, [roomId, ready]);
 
   return (
@@ -43,7 +39,11 @@ export default function Whiteboard({ roomId }) {
           setReady(true);
         }}
         onChange={(elements, appState) => {
-          if (!roomId || isRemoteUpdate.current) return;
+          if (!roomId) return;
+          if (skipNextChange.current) {
+            skipNextChange.current = false;
+            return;
+          }
           clearTimeout(window._wbTimer);
           window._wbTimer = setTimeout(async () => {
             try {

@@ -5,12 +5,21 @@ export async function getRooms() {
     .from('rooms')
     .select('*, room_members(count)')
     .order('created_at', { ascending: false })
-
   if (error) throw error
   return data.map((room) => ({
     ...room,
     member_count: room.room_members?.[0]?.count ?? 0,
   }))
+}
+
+export async function getRoom(roomId) {
+  const { data, error } = await supabase
+    .from('rooms')
+    .select('*, room_members(count)')
+    .eq('id', roomId)
+    .single()
+  if (error) throw error
+  return { ...data, member_count: data.room_members?.[0]?.count ?? 0 }
 }
 
 export async function createRoom(name) {

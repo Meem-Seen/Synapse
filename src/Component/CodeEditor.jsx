@@ -56,15 +56,14 @@ function CodeEditor({ roomId }) {
         isRemoteUpdate.current = false
       }
     })
-    const channel = subscribeToCode(roomId, (data) => {
-      if (data.content && editorInstance.current) {
+    subscribeToCode(roomId, (data) => {
+      if (data && editorInstance.current) {
         isRemoteUpdate.current = true
-        editorInstance.current.setValue(data.content, -1)
+        editorInstance.current.setValue(data.content ?? '', -1)
         editorInstance.current.clearSelection()
         isRemoteUpdate.current = false
       }
     })
-    return () => channel.unsubscribe()
   }, [roomId])
 
   useEffect(() => {

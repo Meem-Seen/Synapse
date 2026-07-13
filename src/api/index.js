@@ -1,5 +1,5 @@
 export { supabase } from './supabaseClient'
-export { getRooms, createRoom, joinRoom, getRoomMembers, getMyRooms } from './rooms'
+export { getRooms, getRoom, createRoom, joinRoom, getRoomMembers, getMyRooms } from './rooms'
 export { getMessages, sendMessage } from './messages'
 export { getCode, saveCode } from './code'
 export { getWhiteboardScene, saveWhiteboardScene } from './whiteboard'

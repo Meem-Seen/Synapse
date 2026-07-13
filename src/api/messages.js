@@ -11,13 +11,13 @@ export async function getMessages(roomId) {
   return data
 }
 
-export async function sendMessage(roomId, text) {
+export async function sendMessage(roomId, text, role = 'bot') {
   const user = (await supabase.auth.getUser()).data.user
   if (!user) throw new Error('Not authenticated')
 
   const { data, error } = await supabase
     .from('chat_messages')
-    .insert({ room_id: roomId, user_id: user.id, text })
+    .insert({ room_id: roomId, user_id: user.id, text, role })
     .select()
     .single()
 

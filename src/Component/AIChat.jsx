@@ -42,15 +42,14 @@ function AIChat({ roomId }) {
     if (!roomId) return;
     getMessages(roomId).then((msgs) => {
       if (!Array.isArray(msgs)) return;
-      setMessages([{ text: "Hey I'm Synapty AI. How can I help you?", sender: "bot" }, ...msgs.map((m) => ({ text: m.text, sender: "bot" }))]);
+      setMessages([{ text: "Hey I'm Synapty AI. How can I help you?", sender: "bot" }, ...msgs.map((m) => ({ text: m.text, sender: m.role || 'bot' }))]);
     }).catch(() => {});
-    const channel = subscribeToMessages(roomId, (msg) => {
+    subscribeToMessages(roomId, (msg) => {
       setMessages((prev) => {
         if (prev.some((m) => m.text === msg.text && m.sender === msg.sender)) return prev;
         return [...prev, msg];
       });
     });
-    return () => channel.unsubscribe();
   }, [roomId]);
 
   const chatEndRef = useRef(null);
@@ -75,7 +74,7 @@ function AIChat({ roomId }) {
 
     const userMsg = { text: question, sender: "user" };
     setMessages((prev) => [...prev, userMsg]);
-    await apiSendMessage(roomId, question);
+    await apiSendMessage(roomId, question, 'user');
     await broadcastMessage(roomId, { text: question, sender: "user" });
 
     setInput("");

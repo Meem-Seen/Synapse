@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "./AuthContext";
+import AuthModal from './AuthModal'
 
 export default function Navbar({ openModal }) {
   const { user, logout } = useAuth();
@@ -40,7 +41,7 @@ export default function Navbar({ openModal }) {
                 </span>
                 <span className="fw-semibold">{user.user_metadata?.full_name || user.email}</span>
               </button>
-
+              
               {menuOpen && (
                 <div
                   className="position-absolute end-0 mt-2 rounded-3 shadow-lg overflow-hidden"
@@ -61,7 +62,6 @@ export default function Navbar({ openModal }) {
               )}
             </div>
           )}
-
           <button className="custom-btn" onClick={openModal}>
             + New Room
           </button>

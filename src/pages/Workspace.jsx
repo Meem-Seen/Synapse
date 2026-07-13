@@ -5,10 +5,9 @@ import Whiteboard from "../Component/Whiteboard";
 import WorkspaceNavbar from "../Component/WorkspaceNavbar";
 export default function Workspace() {
   const { roomId } = useParams();
-
   return (
     <div>
-      <WorkspaceNavbar />
+      <WorkspaceNavbar roomId={roomId} />
       <Whiteboard roomId={roomId} />
       <CodeEditor roomId={roomId} />
       <AIChat roomId={roomId} />
