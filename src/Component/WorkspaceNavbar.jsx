@@ -28,34 +28,34 @@ export default function WorkspaceNavbar({ roomId }) {
 
   return (
     <nav className="workspace-navbar sticky-top">
-      <div className="container-fluid d-flex align-items-center">
+      <div className="container-fluid d-flex align-items-center gap-1 gap-sm-2">
         {/* Logo */}
         <div
           className="d-flex align-items-center gap-2 cursor-pointer"
           onClick={() => navigate("/")}
         >
           <span className="logo-badge">✦</span>
-          <span className="app-name">Synapse</span>
+          <span className="app-name d-none d-sm-inline">Synapse</span>
         </div>
 
         {/* Room Info */}
-        <div className="d-flex align-items-center gap-2 room-info">
+        <div className="room-info d-none d-md-flex align-items-center gap-2">
           <span className="status-dot" />
           <span className="room-name">{room?.name ?? "Loading..."}</span>
         </div>
 
         {/* Controls on the right */}
-        <div className="d-flex align-items-center gap-2 ms-auto">
+        <div className="d-flex align-items-center gap-1 gap-sm-2 ms-auto">
           {/* Attendee Counter */}
-          <div className="control-item d-flex align-items-center gap-2 rounded-pill">
+          <div className="control-item d-flex align-items-center gap-1 rounded-pill">
             <i className="fa-solid fa-user-group" />
-            <span>{room?.member_count ?? 0} in the room</span>
+            <span className="d-none d-sm-inline">{room?.member_count ?? 0} in the room</span>
           </div>
 
-          {/* User Menu */}
+          {/* User Menu — name + chevron hidden on xs */}
           <div className="dropdown">
             <button
-              className="control-item user-menu d-flex align-items-center gap-2 rounded-pill border-0 bg-transparent"
+              className="control-item user-menu d-flex align-items-center gap-1 rounded-pill border-0 bg-transparent"
               type="button"
               data-bs-toggle="dropdown"
               aria-expanded="false"
@@ -65,10 +65,10 @@ export default function WorkspaceNavbar({ roomId }) {
                   user?.email?.[0]?.toUpperCase() ||
                   "?"}
               </span>
-              <span className="user-name">
+              <span className="user-name d-none d-sm-inline">
                 {user?.user_metadata?.full_name || user?.email || "Guest"}
               </span>
-              <i className="fa-solid fa-chevron-down" />
+              <i className="fa-solid fa-chevron-down d-none d-sm-inline" />
             </button>
 
             <ul className="dropdown-menu dropdown-menu-end">
@@ -88,10 +88,10 @@ export default function WorkspaceNavbar({ roomId }) {
             </ul>
           </div>
           {/* Connection Status */}
-          <div className={`control-item d-flex align-items-center gap-2 rounded-pill ${isOnline ? "online-connection-status" : "offline-connection-status"}`}>
+          <div className={`control-item d-flex align-items-center gap-1 rounded-pill ${isOnline ? "online-connection-status" : "offline-connection-status"}`}>
             <span className={isOnline ? "online-dot" : "offline-dot"} />
             <i className="fa-solid fa-wifi" />
-            <span>{isOnline ? "online" : "offline"}</span>
+            <span className="d-none d-sm-inline">{isOnline ? "online" : "offline"}</span>
           </div>
         </div>
       </div>

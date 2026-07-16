@@ -795,9 +795,15 @@ border:1px solid rgba(255,255,255,.12);
 
 .workspace-navbar {
   background: #1a1c23;
-  padding: 10px 24px;
+  padding: 10px 12px;
   border-bottom: 1px solid #2a2d36;
   z-index: 1030;
+}
+
+@media (min-width: 576px) {
+  .workspace-navbar {
+    padding: 10px 24px;
+  }
 }
 
 .workspace-navbar .container-fluid {
