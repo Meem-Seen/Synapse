@@ -14,7 +14,7 @@
 
 <br/>
 
-[🌐 Live Demo](https://synapse-seven-puce.vercel.app/) &nbsp;&nbsp;•&nbsp;&nbsp; [📖 Documentation](https://docs.google.com/document/d/1ltT3Ogx0Z4F6qBDX1ouSMQ3eDoWhRkEUOJzd7p8x4Sg/edit?tab=t.0) &nbsp;&nbsp;•&nbsp;&nbsp; &nbsp;&nbsp;
+[🌐 Live Demo](https://synapse-seven-puce.vercel.app/) &nbsp;&nbsp;•&nbsp;&nbsp; [📖 Documentation](https://docs.google.com/document/d/1ltT3Ogx0Z4F6qBDX1ouSMQ3eDoWhRkEUOJzd7p8x4Sg/edit?tab=t.0) &nbsp;&nbsp; &nbsp;&nbsp;
 </div>
 
 ---
